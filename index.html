@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>腸漏症自我檢測表</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a3a2a;
+    --green-mid: #2d5e3f;
+    --green-soft: #3a7a52;
+    --cream: #faf5eb;
+    --cream-dark: #f0e8d8;
+    --gold: #c8a35a;
+    --gold-light: #e8d5a0;
+    --gold-glow: #f5e6b8;
+    --red-soft: #c44d4d;
+    --red-bg: #fff0f0;
+    --orange: #d4893a;
+    --orange-bg: #fff8ee;
+    --yellow: #d4b93a;
+    --green-result: #2d8a4e;
+    --green-result-bg: #f0faf3;
+    --text-dark: #2a2a2a;
+    --text-mid: #555;
+    --text-light: #888;
+    --shadow-soft: 0 2px 16px rgba(26,58,42,0.08);
+    --shadow-card: 0 4px 24px rgba(26,58,42,0.10);
+    --radius: 16px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -30%; right: -20%;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,163,90,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -20%; left: -15%;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(45,94,63,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px 80px;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 40px 20px 32px;
+  }
+  .header-badge {
+    display: inline-block;
+    background: var(--green-deep);
+    color: var(--gold-light);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    padding: 6px 20px;
+    border-radius: 40px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(28px, 6vw, 42px);
+    font-weight: 900;
+    color: var(--green-deep);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .header h1 span { color: var(--gold); }
+  .header p {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* ── Score strip ── */
+  .score-strip {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--green-deep);
+    color: var(--cream);
+    padding: 16px 24px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(26,58,42,0.25);
+    transition: all 0.3s ease;
+  }
+  .score-strip.scrolled {
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .score-metric {
+    flex: 1;
+    min-width: 120px;
+  }
+  .score-label {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.7;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+  .score-value {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--gold-light);
+    line-height: 1.1;
+  }
+  .score-value small {
+    font-size: 14px;
+    font-weight: 400;
+    opacity: 0.6;
+  }
+  .score-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255,255,255,0.2);
+  }
+  .score-bar-wrap {
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+  .score-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ── Category ── */
+  .category {
+    background: #fff;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    border: 1px solid rgba(26,58,42,0.06);
+    transition: all 0.3s ease;
+  }
+  .category:hover { box-shadow: var(--shadow-card); }
+  .category.has-checked {
+    border-color: var(--gold);
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .category-header:hover { background: rgba(26,58,42,0.02); }
+
+  .category-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .category-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--green-deep);
+    flex: 1;
+  }
+  .category-badges {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .category-count {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    background: var(--cream);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .category-count.active {
+    background: var(--green-deep);
+    color: var(--gold-light);
+  }
+  .severity {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .severity.light { background: var(--green-result-bg); color: var(--green-result); }
+  .severity.mid { background: var(--orange-bg); color: var(--orange); }
+  .severity.high { background: var(--red-bg); color: var(--red-soft); }
+
+  .category-chevron {
+    font-size: 16px;
+    color: var(--text-light);
+    transition: transform 0.3s ease;
+    margin-left: 4px;
+  }
+  .category.open .category-chevron { transform: rotate(180deg); }
+
+  .category-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+  .category.open .category-body { max-height: 3000px; }
+
+  .items { padding: 4px 24px 20px; }
+
+  /* ── Main item ── */
+  .item {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(26,58,42,0.05);
+  }
+  .item:last-child { border-bottom: none; }
+
+  .item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .item-row:active { opacity: 0.7; }
+
+  .checkbox {
+    width: 24px; height: 24px;
+    border: 2px solid #ccc;
+    border-radius: 7px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    background: #fff;
+  }
+  .checkbox.small {
+    width: 20px; height: 20px;
+    border-radius: 6px;
+  }
+  .item.checked > .item-row .checkbox {
+    background: var(--green-deep);
+    border-color: var(--green-deep);
+  }
+  .sub-item.checked .checkbox {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .checkbox svg {
+    width: 14px; height: 14px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  .checkbox.small svg { width: 12px; height: 12px; }
+  .item.checked > .item-row .checkbox svg,
+  .sub-item.checked .checkbox svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .item-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-dark);
+    font-weight: 500;
+    flex: 1;
+  }
+  .item-hint {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  /* ── Sub items ── */
+  .sub-items {
+    margin-top: 10px;
+    margin-left: 38px;
+    padding: 12px 14px;
+    background: var(--cream);
+    border-radius: 10px;
+    border-left: 3px solid var(--gold-light);
+    display: none;
+  }
+  .item.expanded .sub-items { display: block; }
+
+  .sub-items-label {
+    font-size: 11px;
+    color: var(--text-light);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .sub-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .sub-item:active { opacity: 0.7; }
+  .sub-item-text {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .sub-item.checked .sub-item-text {
+    color: var(--green-deep);
+    font-weight: 500;
+  }
+
+  .sub-hint {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ── Result panel ── */
+  .result-panel {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    margin-top: 24px;
+    box-shadow: var(--shadow-card);
+    text-align: center;
+    border: 2px solid transparent;
+    transition: all 0.4s ease;
+  }
+  .result-panel.level-low {
+    border-color: var(--green-result);
+    background: var(--green-result-bg);
+  }
+  .result-panel.level-mid {
+    border-color: var(--orange);
+    background: var(--orange-bg);
+  }
+  .result-panel.level-high {
+    border-color: var(--red-soft);
+    background: var(--red-bg);
+  }
+
+  .result-emoji { font-size: 48px; margin-bottom: 12px; }
+  .result-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--green-deep);
+  }
+  .result-desc {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.8;
+    max-width: 480px;
+    margin: 0 auto 16px;
+  }
+
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--green-deep);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Actions ── */
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+  .btn-primary {
+    background: var(--green-deep);
+    color: var(--cream);
+  }
+  .btn-primary:hover {
+    background: var(--green-mid);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(26,58,42,0.25);
+  }
+  .btn-secondary {
+    background: var(--cream-dark);
+    color: var(--green-deep);
+  }
+  .btn-secondary:hover { background: var(--gold-light); }
+
+  /* ── Mechanism panel ── */
+  .mechanism-panel {
+    background: #fff;
+    border-radius: var(--radius);
+    margin-top: 20px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    display: none;
+    border: 1px solid rgba(200,163,90,0.3);
+  }
+  .mechanism-panel.show { display: block; animation: fadeUp 0.5s ease; }
+
+  .mechanism-head {
+    background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
+    color: var(--cream);
+    padding: 22px 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  .mechanism-head::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,163,90,0.25) 0%, transparent 70%);
+  }
+  .mechanism-head-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold-light);
+    opacity: 0.9;
+    margin-bottom: 6px;
+  }
+  .mechanism-head-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .mechanism-head-sub {
+    font-size: 13px;
+    opacity: 0.75;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+
+  .mechanism-body { padding: 4px 0; }
+
+  .mech-block {
+    padding: 20px 26px;
+    border-bottom: 1px solid rgba(26,58,42,0.06);
+  }
+  .mech-block:last-child { border-bottom: none; }
+
+  .mech-block-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .mech-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .mech-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--green-deep);
+    flex: 1;
+  }
+  .mech-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: var(--cream);
+    color: var(--text-mid);
+  }
+
+  .mech-flow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 12px 0 14px;
+    padding: 12px 14px;
+    background: var(--cream);
+    border-radius: 10px;
+    border-left: 3px solid var(--gold);
+  }
+  .mech-flow-step {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-deep);
+    padding: 4px 10px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .mech-flow-arrow {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .mech-desc {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-mid);
+  }
+  .mech-desc strong {
+    color: var(--green-deep);
+    font-weight: 600;
+  }
+  .mech-desc code {
+    font-family: inherit;
+    background: var(--gold-glow);
+    color: var(--green-deep);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .mech-note {
+    background: var(--cream);
+    margin: 0 26px 20px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-mid);
+    border-left: 3px solid var(--green-soft);
+  }
+  .mech-note strong {
+    color: var(--green-deep);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.8;
+  }
+  .footer a { color: var(--green-soft); text-decoration: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .category { animation: fadeUp 0.5s ease both; }
+  .category:nth-child(2) { animation-delay: 0.05s; }
+  .category:nth-child(3) { animation-delay: 0.1s; }
+  .category:nth-child(4) { animation-delay: 0.15s; }
+  .category:nth-child(5) { animation-delay: 0.2s; }
+  .category:nth-child(6) { animation-delay: 0.25s; }
+  .category:nth-child(7) { animation-delay: 0.3s; }
+  .category:nth-child(8) { animation-delay: 0.35s; }
+
+  @media (max-width: 600px) {
+    .container { padding: 16px 12px 80px; }
+    .score-strip { padding: 14px 16px; }
+    .score-value { font-size: 22px; }
+    .category-header { padding: 16px 18px; gap: 10px; }
+    .category-icon { width: 38px; height: 38px; font-size: 18px; }
+    .category-title { font-size: 15px; }
+    .items { padding: 4px 18px 16px; }
+    .sub-items { margin-left: 0; }
+    .result-panel { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-badge">自我檢測</div>
+    <h1>你<span>漏</span>了嗎？</h1>
+    <p>勾選符合你目前狀況的項目，了解你的腸道屏障健康程度</p>
+  </div>
+
+  <div class="score-strip" id="scoreStrip">
+    <div class="score-row">
+      <div class="score-metric">
+        <div class="score-label">受影響系統</div>
+        <div class="score-value"><span id="breadthNum">0</span><small> / <span id="breadthTotal">0</span></small></div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-metric">
+        <div class="score-label">勾選總項目</div>
+        <div class="score-value"><span id="totalChecked">0</span></div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-metric">
+        <div class="score-label">健康指數</div>
+        <div class="score-value" id="healthIndex" style="color:#f5e6b8">—</div>
+      </div>
+    </div>
+    <div class="score-bar-wrap">
+      <div class="score-bar" id="scoreBar"></div>
+    </div>
+  </div>
+
+  <div id="categoriesWrap"></div>
+
+  <div class="result-panel" id="resultPanel">
+    <div class="result-emoji" id="resultEmoji">🌿</div>
+    <div class="result-title" id="resultTitle">開始勾選吧！</div>
+    <div class="result-desc" id="resultDesc">依照你目前的狀況逐項勾選，完成後即可看到腸道屏障的評估結果。</div>
+    <div class="result-stats" id="resultStats" style="display:none;">
+      <div class="stat">
+        <div class="stat-num" id="statBreadth">0</div>
+        <div class="stat-label">影響系統數</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statTotal">0</div>
+        <div class="stat-label">總症狀數</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statScore">100</div>
+        <div class="stat-label">健康指數</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mechanism-panel" id="mechanismPanel">
+    <div class="mechanism-head">
+      <div class="mechanism-head-label">WHY · 為什麼會這樣？</div>
+      <div class="mechanism-head-title">你的身體正在發生什麼事？</div>
+      <div class="mechanism-head-sub">用最簡單的話，告訴你這些症狀背後的真相 —— 了解原因，才能對症修復。</div>
+    </div>
+    <div class="mechanism-body" id="mechanismBody"></div>
+    <div class="mech-note">
+      <strong>💡 所有路徑都通往同一個地方</strong>
+      不管是壓力、飲食、藥物還是情緒 —— 它們最後都會讓腸道這面「<strong>守護身體的城牆</strong>」出現裂縫。食物殘渣、毒素、壞菌透過這些裂縫跑進血液，免疫系統就得 24 小時備戰，演變成<strong>全身慢性發炎</strong>。這就是為什麼表面上是皮膚過敏、睡不好、月經不順，根源卻都在腸道。
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-secondary" onclick="resetAll()">🔄 重新填寫</button>
+    <button class="btn btn-primary" onclick="shareResult(event)">📋 複製完整結果</button>
+  </div>
+
+  <div class="footer">
+    ⚠️ 本表僅供自我覺察參考，不代表醫療診斷<br>
+    如有健康疑慮，請諮詢專業醫師或營養師<br>
+    <br>
+    朵朵健康療聊室 ✦ <a href="#">@dodo_health_talk</a>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {
+    title: '藥物與醫療史',
+    icon: '💊',
+    color: '#e8f0eb',
+    items: [
+      { text: '過去／現在因特定因素服用過藥物一段時間' },
+      { text: '過去曾接受過化療、放射線治療等' },
+    ]
+  },
+  {
+    title: '壓力與生活型態',
+    icon: '🧠',
+    color: '#fef6e6',
+    items: [
+      { text: '工作／生活常處於緊繃壓力狀態' },
+      { text: '曾為某個目標過度運動且無補充抗氧化劑' },
+      { text: '經常熬夜晚睡，或因工作關係作息日夜顛倒' },
+    ]
+  },
+  {
+    title: '體重與代謝',
+    icon: '⚖️',
+    color: '#e8f0eb',
+    items: [
+      { text: '體重／體脂超標，易水腫浮腫、代謝循環差很難瘦' },
+      { text: '體重過輕但卻怎麼都吃不胖' },
+      {
+        text: '過去曾使用不當方式減肥',
+        subs: ['節食', '中西藥減肥', '生酮飲食', '代餐', '拉肚子的產品']
+      },
+    ]
+  },
+  {
+    title: '飲食與生活習慣',
+    icon: '🍔',
+    color: '#fef6e6',
+    items: [
+      {
+        text: '飲食偏好',
+        subs: ['嗜糖', '加工烘焙食品', '油炸食物', '重鹹口味']
+      },
+      {
+        text: '菸酒檳榔相關',
+        subs: ['抽菸', '喝酒', '嚼檳榔', '常處二手菸環境']
+      },
+    ]
+  },
+  {
+    title: '神經與情緒症狀',
+    icon: '😴',
+    color: '#f3eef8',
+    items: [
+      { text: '莫名偏頭痛、注意力不集中、記憶力差' },
+      {
+        text: '睡眠障礙',
+        subs: ['睡不著', '睡不好', '睡不飽', '睡不起來']
+      },
+      { text: '容易疲勞、嗜睡、無精打采提不起勁' },
+      {
+        text: '情緒相關困擾',
+        subs: ['常感沮喪', '憂鬱', '焦慮', '情緒起伏大']
+      },
+    ]
+  },
+  {
+    title: '呼吸道與過敏',
+    icon: '🤧',
+    color: '#e8f0eb',
+    items: [
+      {
+        text: '上呼吸道症狀',
+        subs: ['常打噴嚏', '流鼻水', '鼻塞', '不自覺想清喉嚨']
+      },
+      {
+        text: '呼吸不順問題',
+        subs: ['呼吸困難', '喘不過氣', '胸悶']
+      },
+      {
+        text: '身體過敏症狀',
+        subs: ['濕疹', '乾癬', '異位性皮膚炎', '尋麻疹', '痤瘡', '氣喘']
+      },
+    ]
+  },
+  {
+    title: '免疫與自體免疫',
+    icon: '🛡️',
+    color: '#fef6e6',
+    items: [
+      {
+        text: '曾被診斷罹患自體免疫疾病',
+        subs: ['類風濕性關節炎', '僵直性脊椎炎', '乾燥症', '多發性硬化', '紅斑性狼瘡', '乳糜瀉', '乾癬', '重肌無力症']
+      },
+      {
+        text: '常被傳染的感染症',
+        subs: ['感冒', '流感', '腸胃炎']
+      },
+    ]
+  },
+  {
+    title: '消化與代謝疾病',
+    icon: '🔥',
+    color: '#fef0ec',
+    items: [
+      {
+        text: '代謝症候群相關',
+        subs: ['糖尿病', '血糖異常', '三高（高血壓／高血糖／高血脂）', '脂肪肝', '肥胖', '多囊性卵巢']
+      },
+      {
+        text: '內分泌與神經系統',
+        subs: ['甲狀腺機能異常', '自律神經失調', '精神系統疾病']
+      },
+      {
+        text: '腸胃問題反覆發生',
+        subs: ['胃食道逆流', '胃痛', '脹氣', '便秘', '腹瀉', '放臭屁']
+      },
+      {
+        text: '泌尿道／生殖器問題',
+        subs: ['私密處搔癢', '生殖器搔癢', '分泌物色濁有異味', '頻尿', '夜尿']
+      },
+    ]
+  },
+];
+
+// ── 發炎機轉資料庫（對應每個類別的勾選結果）──
+const MECHANISMS = {
+  0: {
+    icon: '💊',
+    color: '#e8f0eb',
+    title: '藥物／醫療直接傷害腸道',
+    tag: '好菌被掃光',
+    flow: ['吃藥／治療', '好菌被消滅', '壞菌來搶地盤', '腸壁出現破洞'],
+    desc: '想像你的腸道是一片花園，<strong>好菌</strong>像是勤勞的園丁，把雜草（壞菌）壓制住。長期吃止痛藥、抗生素、類固醇，或做過化放療，等於把園丁也一併趕走。壞菌和黴菌趁機大量繁殖，還會分泌毒素腐蝕腸壁，讓腸道這層「城牆」出現裂縫。'
+  },
+  1: {
+    icon: '🧠',
+    color: '#fef6e6',
+    title: '壓力會把腸道「撐開」',
+    tag: '壓力讓腸道漏',
+    flow: ['長期壓力／熬夜', '壓力荷爾蒙飆升', '腸道細胞鬆開', '食物殘渣滲出去'],
+    desc: '腸道細胞之間本來像<strong>緊密的拉鍊</strong>，一顆顆排得整整齊齊。但長期壓力、熬夜、過度運動時，身體會分泌大量<strong>壓力荷爾蒙（皮質醇）</strong>，這些荷爾蒙會把拉鍊一格格鬆開。原本應該留在腸道裡的食物殘渣和毒素，就會從縫隙「漏」到血液裡。熬夜還會讓好菌作息大亂，讓壞菌趁機當老大。'
+  },
+  2: {
+    icon: '⚖️',
+    color: '#e8f0eb',
+    title: '愈減肥，腸道愈脆弱',
+    tag: '惡性循環',
+    flow: ['極端減肥', '好菌沒東西吃', '腸壁修復材料不夠', '更難瘦下來'],
+    desc: '你的<strong>好菌也需要吃飯</strong>，它們最愛的食物是膳食纖維。極端節食、代餐、拉肚子的減肥產品，會讓好菌餓死、壞菌變多。更糟的是，好菌吃飽後會生產一種叫<strong>「短鏈脂肪酸」</strong>的物質，這是腸道細胞修復的主要能量來源。沒有好菌幫忙，腸壁就像沒錢修繕的老房子，愈來愈漏 —— 代謝也跟著變差，形成「愈減愈胖」的惡性循環。'
+  },
+  3: {
+    icon: '🍔',
+    color: '#fef6e6',
+    title: '愛吃的東西正在融化你的腸壁',
+    tag: '飲食慢性傷害',
+    flow: ['糖／油炸／加工食品', '壞菌大餐', '黏液保護層變薄', '腸壁直接受傷'],
+    desc: '腸道表面有一層<strong>像果凍一樣的黏液</strong>，是保護腸壁的第一道防線。精緻糖、加工食品裡的乳化劑會<strong>「溶解」這層黏液</strong>，讓腸壁直接暴露在食物和壞菌面前。油炸食物在高溫下產生的物質、反式脂肪都是強力的「發炎原料」。酒精更直接 —— 它會像去漬劑一樣，溶掉腸道細胞的保護膜。'
+  },
+  4: {
+    icon: '😴',
+    color: '#f3eef8',
+    title: '腸道其實是你的「第二個大腦」',
+    tag: '腸道在求救',
+    flow: ['腸道漏', '發炎物質跑到腦部', '影響腦部運作', '失眠／憂鬱／腦霧'],
+    desc: '你可能不知道：<strong>全身 90% 的快樂荷爾蒙（血清素）是在腸道製造的</strong>。腸道和大腦之間有一條「高速公路」不斷互相傳訊息。當腸道發炎、漏了，發炎物質就會順著血液跑到腦部，引起腦霧、睡不好、情緒低落、注意力不集中。所以很多時候不是你「想太多」，是<strong>你的腸道在發出求救訊號</strong>。'
+  },
+  5: {
+    icon: '🤧',
+    color: '#e8f0eb',
+    title: '過敏的根源可能在腸道，不在皮膚',
+    tag: '免疫誤判',
+    flow: ['食物沒消化完就漏出去', '免疫系統誤以為是敵人', '全身警報大作', '皮膚／鼻子／氣管過敏'],
+    desc: '正常情況下，食物要先被分解成很小的分子才會被吸收。但腸道漏了之後，<strong>大塊的食物殘渣直接跑進血液</strong>，免疫系統從沒見過這種東西，會誤以為是「外星人入侵」，派出抗體全面追殺。這些抗體會在全身跑來跑去，在皮膚表現成濕疹、在鼻子變成鼻過敏、在氣管成為氣喘。所以濕疹擦藥一直好不了，問題可能不在皮膚，<strong>而在腸道</strong>。'
+  },
+  6: {
+    icon: '🛡️',
+    color: '#fef6e6',
+    title: '腸漏是自體免疫疾病的共同起點',
+    tag: '免疫系統失控',
+    flow: ['腸道漏', '外來物進入血液', '長相跟人體組織很像', '免疫系統誤傷自己人'],
+    desc: '自體免疫疾病最難解的地方是：<strong>免疫系統開始攻擊自己的身體</strong>。為什麼會這樣？哈佛大學的研究發現，很多外來蛋白質的「長相」跟人體組織很像（像孿生兄弟）。當腸道漏了，這些外來物進入血液，免疫系統在追殺它們時，會<strong>連自己的關節、甲狀腺、皮膚一起打</strong>，演變成類風濕、橋本氏、乾癬等疾病。所以國外功能醫學界有句話：<strong>「修復所有自體免疫疾病，都要從腸道開始」</strong>。'
+  },
+  7: {
+    icon: '🔥',
+    color: '#fef0ec',
+    title: '發炎已經燒到全身了',
+    tag: '多個器官一起出狀況',
+    flow: ['腸道長期發炎', '發炎擴散到全身', '內分泌／代謝跟著亂', '多個器官出問題'],
+    desc: '當腸胃問題反覆發作，代表腸道已經「漏很久了」。發炎物質在血液裡到處跑，像<strong>悶燒的柴火</strong>，慢慢波及到其他器官：胰臟累了出現糖尿病、卵巢亂了變成多囊、甲狀腺失控、私密處反覆感染。對女生特別重要的是：<strong>腸道菌會負責回收雌激素</strong>，菌相一亂，雌激素代謝也會失衡，直接影響經期、肌瘤、子宮內膜異位等問題。這時候不是某個器官壞掉 —— 是<strong>整個系統在求救</strong>。'
+  }
+};
+
+// Build item IDs
+const state = {
+  main: new Set(),    // main items directly checked (no subs)
+  subs: {},           // { itemKey: Set(subIdx) } for items with subs
+};
+
+const totalCategories = DATA.length;
+
+function render() {
+  const wrap = document.getElementById('categoriesWrap');
+  document.getElementById('breadthTotal').textContent = totalCategories;
+
+  wrap.innerHTML = DATA.map((cat, ci) => {
+    const itemsHtml = cat.items.map((item, ii) => {
+      const itemKey = `${ci}-${ii}`;
+      const hasSubs = item.subs && item.subs.length > 0;
+
+      if (hasSubs) {
+        state.subs[itemKey] = state.subs[itemKey] || new Set();
+        const subsHtml = item.subs.map((sub, si) => `
+          <div class="sub-item" onclick="toggleSub('${itemKey}', ${si}, ${ci})">
+            <div class="checkbox small">
+              <svg viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="sub-item-text">${sub}</div>
+          </div>
+        `).join('');
+
+        return `
+          <div class="item" data-key="${itemKey}">
+            <div class="item-row" onclick="toggleMain('${itemKey}', ${ci}, true)">
+              <div class="checkbox">
+                <svg viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div style="flex:1">
+                <div class="item-text">${item.text} <span style="font-weight:400;color:var(--text-light);font-size:13px">（點選展開細項）</span></div>
+              </div>
+            </div>
+            <div class="sub-items">
+              <div class="sub-items-label">◆ 請勾選符合的項目</div>
+              ${subsHtml}
+            </div>
+          </div>`;
+      } else {
+        return `
+          <div class="item" data-key="${itemKey}">
+            <div class="item-row" onclick="toggleMain('${itemKey}', ${ci}, false)">
+              <div class="checkbox">
+                <svg viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="item-text">${item.text}</div>
+            </div>
+          </div>`;
+      }
+    }).join('');
+
+    return `
+      <div class="category open" data-cat="${ci}">
+        <div class="category-header" onclick="toggleCat(${ci})">
+          <div class="category-icon" style="background:${cat.color}">${cat.icon}</div>
+          <div class="category-title">${cat.title}</div>
+          <div class="category-badges">
+            <span class="category-count" id="catCount${ci}">0</span>
+            <span class="severity" id="catSev${ci}" style="display:none"></span>
+          </div>
+          <div class="category-chevron">▾</div>
+        </div>
+        <div class="category-body">
+          <div class="items">${itemsHtml}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleMain(itemKey, ci, hasSubs) {
+  const itemEl = document.querySelector(`.item[data-key="${itemKey}"]`);
+
+  if (hasSubs) {
+    // Toggle expansion
+    itemEl.classList.toggle('expanded');
+  } else {
+    // Direct toggle
+    if (state.main.has(itemKey)) {
+      state.main.delete(itemKey);
+      itemEl.classList.remove('checked');
+    } else {
+      state.main.add(itemKey);
+      itemEl.classList.add('checked');
+    }
+    updateAll();
+  }
+}
+
+function toggleSub(itemKey, subIdx, ci) {
+  event.stopPropagation();
+  const set = state.subs[itemKey];
+  if (set.has(subIdx)) set.delete(subIdx);
+  else set.add(subIdx);
+
+  // Update UI
+  const itemEl = document.querySelector(`.item[data-key="${itemKey}"]`);
+  const subEls = itemEl.querySelectorAll('.sub-item');
+  subEls[subIdx].classList.toggle('checked', set.has(subIdx));
+
+  // Main item is "checked" if any sub is checked
+  itemEl.classList.toggle('checked', set.size > 0);
+
+  updateAll();
+}
+
+function toggleCat(ci) {
+  const cat = document.querySelector(`.category[data-cat="${ci}"]`);
+  cat.classList.toggle('open');
+}
+
+// ── Scoring logic ──
+function getCategoryData(ci) {
+  const cat = DATA[ci];
+  let mainChecked = 0;
+  let totalChecked = 0;
+
+  cat.items.forEach((item, ii) => {
+    const itemKey = `${ci}-${ii}`;
+    if (item.subs) {
+      const set = state.subs[itemKey] || new Set();
+      if (set.size > 0) mainChecked++;
+      totalChecked += set.size;
+    } else {
+      if (state.main.has(itemKey)) {
+        mainChecked++;
+        totalChecked++;
+      }
+    }
+  });
+
+  return { mainChecked, totalChecked, mainTotal: cat.items.length };
+}
+
+function updateAll() {
+  let breadth = 0;        // number of affected systems
+  let totalChecked = 0;   // total individual checks
+
+  DATA.forEach((cat, ci) => {
+    const d = getCategoryData(ci);
+    totalChecked += d.totalChecked;
+    if (d.mainChecked > 0) breadth++;
+
+    // Update category UI
+    const catEl = document.querySelector(`.category[data-cat="${ci}"]`);
+    catEl.classList.toggle('has-checked', d.totalChecked > 0);
+
+    const countEl = document.getElementById(`catCount${ci}`);
+    countEl.textContent = d.totalChecked;
+    countEl.classList.toggle('active', d.totalChecked > 0);
+
+    // Severity badge for this category
+    const sevEl = document.getElementById(`catSev${ci}`);
+    if (d.totalChecked === 0) {
+      sevEl.style.display = 'none';
+    } else {
+      sevEl.style.display = 'inline-block';
+      const ratio = d.totalChecked / Math.max(d.mainTotal, 1);
+      if (d.totalChecked <= 2 && ratio < 0.5) {
+        sevEl.className = 'severity light';
+        sevEl.textContent = '輕度';
+      } else if (d.totalChecked <= 4 || ratio < 0.7) {
+        sevEl.className = 'severity mid';
+        sevEl.textContent = '中度';
+      } else {
+        sevEl.className = 'severity high';
+        sevEl.textContent = '重度';
+      }
+    }
+  });
+
+  // ── Health Index Calculation ──
+  // Start from 100, deduct based on breadth and intensity
+  // Breadth penalty (more weight): each affected system -6
+  // Severity penalty: total check count * 1.5
+  const breadthPenalty = breadth * 6;
+  const intensityPenalty = totalChecked * 1.5;
+  const rawScore = 100 - breadthPenalty - intensityPenalty;
+  const healthIndex = Math.max(0, Math.round(rawScore));
+
+  // Update top strip
+  document.getElementById('breadthNum').textContent = breadth;
+  document.getElementById('totalChecked').textContent = totalChecked;
+  document.getElementById('healthIndex').textContent = totalChecked === 0 ? '—' : healthIndex;
+
+  const barPct = 100 - healthIndex;
+  document.getElementById('scoreBar').style.width = barPct + '%';
+
+  // Update result panel
+  updateResult(breadth, totalChecked, healthIndex);
+
+  // Render mechanism explanations
+  renderMechanisms();
+}
+
+function renderMechanisms() {
+  const panel = document.getElementById('mechanismPanel');
+  const body = document.getElementById('mechanismBody');
+
+  // Find which categories have any checks
+  const activeCats = [];
+  DATA.forEach((cat, ci) => {
+    const d = getCategoryData(ci);
+    if (d.totalChecked > 0) activeCats.push(ci);
+  });
+
+  if (activeCats.length === 0) {
+    panel.classList.remove('show');
+    return;
+  }
+
+  panel.classList.add('show');
+
+  body.innerHTML = activeCats.map(ci => {
+    const m = MECHANISMS[ci];
+    if (!m) return '';
+    const flowHtml = m.flow.map((step, i) => {
+      const arrow = i < m.flow.length - 1 ? '<span class="mech-flow-arrow">→</span>' : '';
+      return `<span class="mech-flow-step">${step}</span>${arrow}`;
+    }).join('');
+
+    return `
+      <div class="mech-block">
+        <div class="mech-block-head">
+          <div class="mech-icon" style="background:${m.color}">${m.icon}</div>
+          <div class="mech-title">${m.title}</div>
+          <span class="mech-tag">${m.tag}</span>
+        </div>
+        <div class="mech-flow">${flowHtml}</div>
+        <div class="mech-desc">${m.desc}</div>
+      </div>`;
+  }).join('');
+}
+
+function updateResult(breadth, totalChecked, healthIndex) {
+  const panel = document.getElementById('resultPanel');
+  const emoji = document.getElementById('resultEmoji');
+  const title = document.getElementById('resultTitle');
+  const desc = document.getElementById('resultDesc');
+  const stats = document.getElementById('resultStats');
+
+  panel.className = 'result-panel';
+
+  if (totalChecked === 0) {
+    emoji.textContent = '🌿';
+    title.textContent = '開始勾選吧！';
+    desc.textContent = '依照你目前的狀況逐項勾選，完成後即可看到腸道屏障的評估結果。';
+    stats.style.display = 'none';
+    return;
+  }
+
+  stats.style.display = 'flex';
+  document.getElementById('statBreadth').textContent = breadth;
+  document.getElementById('statTotal').textContent = totalChecked;
+  document.getElementById('statScore').textContent = healthIndex;
+
+  if (healthIndex >= 75) {
+    panel.classList.add('level-low');
+    emoji.textContent = '🌱';
+    title.textContent = '腸道屏障狀態尚可';
+    desc.textContent = `健康指數 ${healthIndex} 分｜影響 ${breadth} 個系統。目前狀況相對輕微，建議維持規律作息與均衡飲食，並留意壓力管理，預防勝於治療。`;
+  } else if (healthIndex >= 50) {
+    panel.classList.add('level-mid');
+    emoji.textContent = '⚠️';
+    title.textContent = '腸道屏障警示中';
+    desc.textContent = `健康指數 ${healthIndex} 分｜影響 ${breadth} 個系統。腸道通透性可能已升高，建議從飲食調整（減少精緻糖、加工食品）、補充修復腸道黏膜的營養素（麩醯胺酸、鋅、Omega-3）、壓力管理三方向著手。`;
+  } else {
+    panel.classList.add('level-high');
+    emoji.textContent = '🚨';
+    title.textContent = '腸道屏障高度警示';
+    desc.textContent = `健康指數 ${healthIndex} 分｜影響 ${breadth} 個系統。多系統症狀顯示全身性發炎可能已啟動，強烈建議諮詢功能醫學醫師進行完整評估（如腸漏測試、食物不耐受檢測），並積極調整飲食與生活型態。`;
+  }
+}
+
+function resetAll() {
+  state.main.clear();
+  Object.keys(state.subs).forEach(k => state.subs[k].clear());
+  document.querySelectorAll('.item').forEach(el => {
+    el.classList.remove('checked', 'expanded');
+  });
+  document.querySelectorAll('.sub-item').forEach(el => el.classList.remove('checked'));
+  updateAll();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function shareResult(e) {
+  const btn = e.target.closest('button');
+  let breadth = 0, totalChecked = 0;
+  const lines = [];
+
+  DATA.forEach((cat, ci) => {
+    const checkedItems = [];
+    cat.items.forEach((item, ii) => {
+      const itemKey = `${ci}-${ii}`;
+      if (item.subs) {
+        const set = state.subs[itemKey] || new Set();
+        if (set.size > 0) {
+          const subTexts = [...set].sort((a,b)=>a-b).map(si => item.subs[si]).join('、');
+          checkedItems.push(`  • ${item.text}：${subTexts}`);
+        }
+      } else {
+        if (state.main.has(itemKey)) {
+          checkedItems.push(`  • ${item.text}`);
+        }
+      }
+    });
+    if (checkedItems.length > 0) {
+      breadth++;
+      totalChecked += checkedItems.length;
+      lines.push(`【${cat.icon} ${cat.title}】`);
+      lines.push(...checkedItems);
+      lines.push('');
+    }
+  });
+
+  const breadthPenalty = breadth * 6;
+  const intensityPenalty = totalChecked * 1.5;
+  const healthIndex = Math.max(0, Math.round(100 - breadthPenalty - intensityPenalty));
+
+  let level = '🌱 尚可';
+  if (healthIndex < 50) level = '🚨 高度警示';
+  else if (healthIndex < 75) level = '⚠️ 警示中';
+
+  const text = totalChecked === 0
+    ? '你還沒勾選任何項目喔～'
+    : `📋 腸漏症自我檢測結果\n`
+    + `━━━━━━━━━━━━━━\n`
+    + `🔍 健康指數：${healthIndex} / 100\n`
+    + `📊 評估等級：${level}\n`
+    + `🎯 影響系統：${breadth} / ${totalCategories} 個\n`
+    + `✅ 勾選項目：${totalChecked} 項\n`
+    + `━━━━━━━━━━━━━━\n\n`
+    + `【勾選明細】\n\n`
+    + lines.join('\n')
+    + `\n━━━━━━━━━━━━━━\n`
+    + `⚠️ 本結果僅供自我覺察參考，不代表醫療診斷\n\n`
+    + `🌿 朵朵健康療聊室\n`
+    + `#腸漏症 #腸道健康 #dodo_health_talk`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✅ 已複製！';
+    setTimeout(() => btn.innerHTML = orig, 2000);
+  });
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('scoreStrip').classList.toggle('scrolled', window.scrollY > 200);
+});
+
+render();
+updateAll();
+</script>
+</body>
+</html>
